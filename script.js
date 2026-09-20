@@ -46,6 +46,19 @@ function showSlide(index) {
   } else {
     media.alt = `${events[selected].title} — photo ${slideIndex + 1}`;
   }
+  if (item.layout === 'auto') {
+    const applyDetectedLayout = () => {
+      const width = item.type === 'video' ? media.videoWidth : media.naturalWidth;
+      const height = item.type === 'video' ? media.videoHeight : media.naturalHeight;
+      if (!width || !height) return;
+      const detected = width >= height ? 'landscape' : 'portrait';
+      media.classList.remove('media-auto');
+      media.classList.add(`media-${detected}`);
+      media.dataset.layout = detected;
+      if (media.isConnected) $('memory').dataset.layout = detected;
+    };
+    media.addEventListener(item.type === 'video' ? 'loadedmetadata' : 'load', applyDetectedLayout, { once: true });
+  }
   $('memory').dataset.layout = item.layout;
   const previous = $('slides').lastElementChild;
   // При быстрых ручных кликах сохраняем только текущий и входящий кадры.
@@ -115,20 +128,16 @@ function resolveMedia(item) {
 }
 function startSlideshow(event) {
   stopSlideshow();
-  const version = photoVersion;
   slidePaused = reducedMotion.matches;
   $('photo-pause').textContent = slidePaused ? 'Play' : 'Pause';
   $('photo-pause').setAttribute('aria-label', slidePaused ? 'Resume slideshow' : 'Pause slideshow');
   $('photo-controls').hidden = true;
   $('placeholder').hidden = false;
-  Promise.all(normalizeMedia(event).map(resolveMedia)).then((loaded) => {
-    if (version !== photoVersion || !dialog.open) return;
-    slideMedia = loaded.filter(Boolean);
-    if (!slideMedia.length) return;
-    $('placeholder').hidden = true;
-    $('photo-controls').hidden = slideMedia.length < 2;
-    showSlide(0);
-  });
+  slideMedia = normalizeMedia(event);
+  if (!slideMedia.length) return;
+  $('placeholder').hidden = true;
+  $('photo-controls').hidden = slideMedia.length < 2;
+  showSlide(0);
 }
 const position = (p) => `${p.x * W / 100},${p.y * H / 100}`;
 
