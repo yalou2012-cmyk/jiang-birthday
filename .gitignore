@@ -1,6 +1,9 @@
 /2/
 /акварель/
 /видео/
+/_compressed_media/
+/_compressed_test/
+/_original_videos_backup/
 /*.jpg
 /images/event-*.png
 Thumbs.db
