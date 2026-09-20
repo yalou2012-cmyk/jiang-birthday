@@ -1,0 +1,154 @@
+:root { color-scheme: dark; --wine: #280b10; --ivory: #f4e9d5; --gold: #c5a36a; --muted: #b7a093; --script-font: "Segoe Script", "Apple Chancery", Georgia, cursive; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--wine); color: var(--ivory); font-family: Arial, Helvetica, sans-serif; }
+button { font: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+button:disabled { cursor: default; opacity: .35; }
+button:focus-visible { outline: 2px solid var(--ivory); outline-offset: 5px; }
+[hidden] { display: none !important; }
+.page { width: min(1560px, 94%); margin: auto; padding: 28px 0 24px; }
+.soundtrack { position: fixed; z-index: 20; right: 18px; bottom: 16px; width: min(360px, calc(100vw - 32px)); padding: 8px 10px 9px; border: 1px solid #c9a86942; background: #280b10eb; box-shadow: 0 10px 34px #0c020699; }
+.soundtrack-label { display: block; margin: 0 0 4px 2px; color: var(--gold); font-family: var(--script-font); font-size: 12px; font-style: italic; letter-spacing: .08em; }
+.soundtrack iframe { display: block; width: 100%; height: 42px; border: 0; }
+.journey-footer { margin-inline: clamp(16px, 4vw, 64px); }
+.intro { text-align: center; margin-bottom: 20px; }
+.eyebrow { color: var(--gold); font-size: 10px; letter-spacing: .28em; line-height: 1.7; margin: 0 0 12px; }
+h1, h2 { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; }
+h1 { font-size: clamp(32px, 4vw, 56px); letter-spacing: -.035em; margin: 0; line-height: 1.12; }
+.intro-note { color: var(--muted); font-size: 13px; margin: 15px 0 0; line-height: 1.6; }
+.map { position: relative; isolation: isolate; width: 100%; overflow: hidden; background: #5c1915; }
+.map-art { display: block; width: 100%; height: auto; }
+.route, .points { position: absolute; inset: 0; width: 100%; height: 100%; }
+.route { pointer-events: none; overflow: visible; }
+.route-base, .route-lit { fill: none; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.route-base { stroke: #b48f52; stroke-width: 1.35; opacity: .6; }
+.route-lit { stroke: #ffe0a0; stroke-width: 1.6; filter: drop-shadow(0 0 4px #eeb557); }
+.traveler { fill: #fff0c3; filter: drop-shadow(0 0 6px #ffdc89); }
+.points { pointer-events: none; }
+.point { position: absolute; transform: translate(-50%, -50%); width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--gold); pointer-events: auto; }
+.point::before { content: ''; position: absolute; width: 12px; height: 12px; border: 1px solid currentColor; background: transparent; border-radius: 50%; left: 50%; top: 50%; transform: translate(-50%, -50%); transition: background .4s, box-shadow .4s; }
+.point:disabled { opacity: 1; }
+.point:disabled::before { opacity: .55; }
+.point.visited::before { background: var(--gold); width: 8px; height: 8px; }
+.point.active::before { background: #ffe1a3; box-shadow: 0 0 0 5px #e9bf6e28, 0 0 18px #ffcc77; animation: breathe 3s ease-in-out infinite; }
+.point-label { position: absolute; top: 50%; width: max-content; max-width: 285px; color: #f0ca79; font-family: var(--script-font); font-style: italic; font-size: clamp(15px, 1.65vw, 25px); font-weight: 400; letter-spacing: .025em; line-height: 1.28; text-align: left; text-shadow: 0 1px 8px #43100c, 0 0 14px #d99a3d00; opacity: 0; pointer-events: none; transition: opacity .7s ease, transform .7s ease; }
+.point-label.label-right { left: calc(100% + 10px); transform: translate(0, calc(-50% + 6px)); }
+.point-label.label-left { right: calc(100% + 10px); text-align: right; transform: translate(0, calc(-50% + 6px)); }
+.point-label.visible { opacity: 1; transform: translate(0, -50%); animation: chapter-glow 2.1s ease-in-out infinite; }
+@keyframes breathe { 50% { box-shadow: 0 0 0 8px #e9bf6e12, 0 0 24px #ffcc77; } }
+@keyframes chapter-glow {
+  0%, 100% { color: #d9ad5c; text-shadow: 0 1px 8px #43100c, 0 0 7px #d99a3d4d; }
+  50% { color: #ffe5aa; text-shadow: 0 1px 8px #43100c, 0 0 12px #ffc864cc, 0 0 24px #e6a54280; }
+}
+.journey-footer { display: flex; align-items: center; gap: 28px; min-height: 94px; padding: 22px 0; border-bottom: 1px solid #c5a36a26; }
+.counter { font-size: 11px; color: var(--gold); letter-spacing: .16em; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.current { flex: 1; min-width: 0; }
+#status { margin: 0 0 7px; font-size: 14px; line-height: 1.4; }
+.text-button { background: none; border: 0; padding: 6px 0; color: var(--gold); font-size: 12px; line-height: 1.5; }
+.text-button:hover:not(:disabled) { color: var(--ivory); }
+.dedication { text-align: center; color: var(--muted); font-family: Georgia, serif; font-style: italic; font-size: 13px; margin: 24px 0 0; }
+dialog { width: min(1280px, calc(100% - 40px)); max-height: calc(100dvh - 40px); padding: 0; border: 1px solid #c5a36a40; background: #260d12; color: var(--ivory); overflow: auto; }
+dialog::backdrop { background: #150609df; }
+dialog[open] { animation: appear .3s ease both; }
+@keyframes appear { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.memory-card { position: relative; padding: clamp(28px, 5vw, 64px); }
+.memory-header, .memory-copy { width: min(100%, 1180px); margin-inline: auto; }
+.memory-header { padding-right: 64px; margin-bottom: 28px; }
+.memory-header h2 { max-width: 900px; font-size: clamp(34px, 5vw, 68px); line-height: .98; }
+.close { position: absolute; z-index: 4; right: 20px; top: 20px; width: 44px; height: 44px; border: 1px solid #e5d3b180; border-radius: 50%; background: #180b0cbf; color: var(--ivory); font-size: 26px; }
+.memory-visual { position: relative; width: min(100%, 1180px); aspect-ratio: 16 / 9; max-height: 68vh; margin-inline: auto; overflow: hidden; background: #19090d; transition: width .45s ease, aspect-ratio .45s ease; }
+dialog[data-layout="portrait"] .memory-visual { width: min(100%, 560px); aspect-ratio: 2 / 3; max-height: 76vh; }
+dialog[data-layout="feature"] .memory-visual { width: min(100%, 1180px); aspect-ratio: 3 / 2; max-height: 72vh; }
+.slides { position: absolute; inset: 0; }
+.memory-visual .memory-slide { position: absolute; inset: 0; margin: auto; display: block; will-change: transform, opacity; }
+.media-landscape { width: min(100%, 1180px); height: 100%; max-height: 68vh; aspect-ratio: 16 / 9; object-fit: contain; }
+.media-portrait { width: auto; max-width: 100%; height: 100%; max-height: 76vh; object-fit: contain; }
+.media-feature { width: min(100%, 1180px); height: 100%; max-height: 72vh; object-fit: cover; }
+.photo-controls { width: min(100%, 1180px); margin: 12px auto 0; display: flex; justify-content: center; align-items: center; gap: 12px; color: var(--gold); }
+.photo-controls button { min-width: 40px; min-height: 44px; border: 0; background: transparent; color: inherit; font-size: 13px; }
+#photo-count { font-size: 11px; letter-spacing: .12em; font-variant-numeric: tabular-nums; }
+.placeholder { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 35px; color: var(--gold); text-align: center; font-size: 12px; letter-spacing: .04em; background: radial-gradient(ellipse at center, #582323 0%, #240c10 75%); }
+.placeholder-star { font-family: Georgia, serif; font-size: 55px; font-weight: 400; }
+.memory-copy { padding-top: 24px; }
+.memory-copy #memory-text { max-width: 680px; }
+/* Original envelope video, followed by a separate handwritten wish. */
+.final-scene { background: radial-gradient(ellipse at 50% 40%, #571c23, #250a11 75%); }
+.final-scene .memory-header { text-align: center; padding: 0 40px; margin-bottom: 22px; }
+.final-scene .memory-header h2 { font-family: var(--script-font); font-style: italic; color: #ddbe80; font-size: clamp(24px, 3vw, 38px); }
+dialog.final-scene .memory-visual { width: min(100%, 900px); aspect-ratio: 4 / 3; max-height: 60vh; background: transparent; }
+.final-scene .memory-slide { object-fit: contain; max-height: none; }
+.final-scene .photo-controls { display: none !important; }
+.letter-scene { text-align: center; }
+.letter-paper { min-height: clamp(290px, 48vh, 470px); padding: 35px clamp(16px, 5vw, 70px); display: flex; flex-direction: column; justify-content: center; align-items: center; }
+.letter-paper p { max-width: 760px; margin: 0; white-space: pre-line; color: #e6c68a; font: italic clamp(22px, 3vw, 36px)/1.65 var(--script-font); text-shadow: 0 0 15px #e3b35b30; }
+.letter-paper button { margin-top: 28px; min-height: 44px; }
+.final-scene .memory-actions { margin-top: 24px; }
+h2 { font-size: clamp(28px, 4vw, 42px); margin: 0 0 14px; overflow-wrap: anywhere; }
+#memory-text { color: #d3beb0; font-size: 15px; line-height: 1.7; margin: 0; white-space: pre-line; }
+.memory-actions { display: flex; justify-content: space-between; gap: 20px; align-items: center; margin-top: 28px; }
+.gold-button { border: 1px solid var(--gold); background: var(--gold); color: #2c1013; padding: 13px 19px; font-size: 12px; line-height: 1.5; }
+.gold-button:hover { background: #dfc08d; }
+body.modal-open { overflow: hidden; }
+.noscript { text-align: center; }
+@media (min-width: 1600px) { .page { padding-top: 24px; } }
+@media (max-width: 600px) {
+  .soundtrack { right: 10px; bottom: 10px; width: min(320px, calc(100vw - 20px)); }
+  .page { padding: 24px 0; }
+  .intro { margin-bottom: 30px; }
+  .map { width: 100%; margin-left: 0; }
+  .journey-footer { gap: 18px; flex-wrap: wrap; padding-top: 23px; }
+  .counter { align-self: flex-start; padding-top: 4px; }
+  #restart { margin-left: auto; }
+  .point-label { max-width: 125px; font-size: clamp(11px, 3vw, 14px); letter-spacing: .015em; }
+  .point-label.label-right { left: calc(100% + 5px); }
+  .point-label.label-left { right: calc(100% + 5px); }
+  dialog { width: calc(100% - 20px); max-height: calc(100dvh - 20px); }
+  .memory-card { padding: 24px 14px 20px; }
+  .memory-header { padding-right: 48px; margin-bottom: 20px; }
+  .memory-header h2 { font-size: clamp(29px, 10vw, 42px); overflow-wrap: normal; }
+  .photo-controls { gap: 4px; }
+  .close { right: 12px; top: 12px; }
+  .memory-visual, dialog[data-layout="feature"] .memory-visual { max-height: 54vh; }
+  dialog[data-layout="portrait"] .memory-visual { width: min(100%, 420px); max-height: 70vh; }
+  .media-portrait { width: 100%; max-height: 70vh; }
+  .memory-actions { gap: 12px; }
+  .gold-button { padding: 12px; }
+  .point::before { width: 9px; height: 9px; }
+
+}
+@media (max-height: 500px) { dialog { max-height: calc(100dvh - 12px); } .memory-visual { max-height: 52vh; } .memory-actions { margin-top: 12px; } }
+@media (prefers-reduced-motion: reduce) { *, *::before { animation: none !important; transition: none !important; } }
+
+/* Gold light remains on the original envelope while its letter is read. */
+.envelope-sparkles { display: none; }
+.final-scene .envelope-greeting { position: absolute; z-index: 4; top: 3%; left: 4%; right: 4%; margin: 0; text-align: center; color: #f1d79e; font: italic clamp(19px, 2.7vw, 35px)/1.5 var(--script-font); text-shadow: 0 2px 10px #20070a, 0 0 15px #efc16c70; pointer-events: none; }
+.final-scene.reading-letter .memory-visual { box-shadow: 0 0 26px #d8a84c35, 0 0 75px #b8893320; }
+.final-scene .letter-paper { position: absolute; z-index: 3; inset: 0; min-height: 0; padding: 75px 8% 18px; text-align: center; background: #240912db; }
+.final-scene .letter-paper p { font-size: clamp(18px, 2.3vw, 30px); line-height: 1.55; }
+.final-scene .envelope-sparkles { display: block; position: absolute; inset: 0; z-index: 4; pointer-events: none; }
+.envelope-sparkles i { position: absolute; left: 24%; top: 65%; width: 3px; height: 3px; border-radius: 50%; background: #ffe6a9; box-shadow: 0 0 7px 2px #f6c76b90; animation: seal-sparkle 4.5s ease-in-out infinite; }
+.envelope-sparkles i:nth-child(2) { left: 72%; top: 44%; animation-delay: -1.7s; }
+.envelope-sparkles i:nth-child(3) { left: 51%; top: 70%; animation-delay: -3s; }
+.envelope-sparkles i:nth-child(4) { left: 81%; top: 73%; animation-delay: -.8s; }
+.envelope-sparkles i:nth-child(5) { left: 34%; top: 34%; animation-delay: -2.3s; }
+@keyframes seal-sparkle { 0%, 100% { opacity: .05; transform: scale(.65); } 50% { opacity: .85; transform: scale(1.15); } }
+@media (max-width: 600px) { dialog.final-scene.reading-letter .memory-visual { aspect-ratio: auto; height: 440px; max-height: none; } .final-scene .letter-paper { padding-top: 80px; } }
+
+/* One calligraphic voice for the opening and closing of the journey. */
+.intro h1, .intro .eyebrow, .intro-note, .dedication,
+.journey-footer #status, .journey-footer .text-button {
+  font-family: var(--script-font);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: .01em;
+}
+.intro h1 { font-size: clamp(30px, 4vw, 54px); line-height: 1.45; color: #eddbb6; }
+.intro .eyebrow { font-size: clamp(17px, 1.7vw, 22px); line-height: 1.6; margin-bottom: 4px; }
+.intro-note { font-size: 17px; margin-top: 5px; color: #c5a36a; }
+.dedication { font-size: clamp(16px, 1.5vw, 20px); line-height: 1.7; color: #c5a36a; }
+.journey-footer #status { font-size: 17px; line-height: 1.65; }
+.journey-footer .text-button { font-size: 15px; }
+@media (max-width: 600px) {
+  .intro { padding-inline: 10px; }
+  .intro h1 { font-size: clamp(27px, 7.2vw, 38px); }
+  .journey-footer #status { font-size: 15px; }
+}
