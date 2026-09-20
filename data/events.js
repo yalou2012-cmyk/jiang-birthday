@@ -145,6 +145,10 @@ window.events = [
       {
         "src": "assets/media/05_a-new-horizon/primorsky-city-watercolor.png",
         "layout": "landscape"
+      },
+      {
+        "src": "assets/media/05_a-new-horizon/12802069_1789829866909283421.mp4",
+        "layout": "portrait"
       }
     ],
     "x": 73.56,
